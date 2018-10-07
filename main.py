@@ -14,6 +14,7 @@ from keras.utils import to_categorical
 from keras.models import Model, Sequential
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
+from keras.layers import RepeatVector, Input
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -101,4 +102,8 @@ image_model.add(Dropout(0.3))
 image_model.add(Dense(1024, activation='relu'))
 image_model.add(Dropout(0.3))
 
+image_model.add(RepeatVector(max_length))
+
+visual_input = Input(shape=(256, 256, 3,))
+encoded_image = image_model(visual_input)
 
