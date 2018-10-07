@@ -44,3 +44,9 @@ def load_data(data_dir):
     return images, text
 
 train_features, texts = load_data(data_dir)
+
+#Creating vocabulary for text
+
+setText = [x.split() for x in texts]
+setText2 = list(set(x for l in setText for x in l))
+
