@@ -11,6 +11,9 @@ import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
+from keras.models import Model, Sequential
+from keras.layers.convolutional import Conv2D
+from keras.layers.core import Dense, Dropout, Flatten
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -82,5 +85,20 @@ def preprocess_data(sequences, features):
     return np.array(X), np.array(y), np.array(image_data)
 
 X, y, image_data = preprocess_data(train_sequences, train_features)
+
+image_model = Sequential()
+image_model.add(Conv2D(16, (3, 3), padding='valid', activation='relu', input_shape=(256, 256, 3,)))
+image_model.add(Conv2D(16, (3,3), activation='relu', padding='same', strides=2))
+image_model.add(Conv2D(32, (3,3), activation='relu', padding='same'))
+image_model.add(Conv2D(32, (3,3), activation='relu', padding='same', strides=2))
+image_model.add(Conv2D(64, (3,3), activation='relu', padding='same'))
+image_model.add(Conv2D(64, (3,3), activation='relu', padding='same', strides=2))
+image_model.add(Conv2D(128, (3,3), activation='relu', padding='same'))
+
+image_model.add(Flatten())
+image_model.add(Dense(1024, activation='relu'))
+image_model.add(Dropout(0.3))
+image_model.add(Dense(1024, activation='relu'))
+image_model.add(Dropout(0.3))
 
 
