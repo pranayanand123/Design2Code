@@ -15,6 +15,7 @@ from keras.models import Model, Sequential
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
 from keras.layers import RepeatVector, Input, Embedding, LSTM, concatenate
+from keras.optimizers import RMSprop
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -118,3 +119,6 @@ decoder = LSTM(512, return_sequences=True)(decoder)
 decoder = LSTM(512, return_sequences=False)(decoder)
 decoder = Dense(vocab_size, activation='softmax')(decoder)
 
+model = Model(inputs=[visual_input, language_input], outputs=decoder)
+optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
+model.compile(loss='categorical_crossentropy', optimizer=optimizer)
