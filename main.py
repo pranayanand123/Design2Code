@@ -8,6 +8,7 @@ Created on Sun Oct  7 22:06:41 2018
 import os
 import cv2
 import numpy as np
+from keras.preprocessing.text import Tokenizer
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -49,4 +50,15 @@ train_features, texts = load_data(data_dir)
 
 setText = [x.split() for x in texts]
 setText2 = list(set(x for l in setText for x in l))
-
+#A dictionary mapping text or symbol to integer
+tokenizer = Tokenizer(filters='', split=" ", lower=False)
+#Fitting on vocabulary 
+tokenizer.fit_on_texts(setText2)
+#One spot for the empty word in the vocabulary 
+vocab_size = len(tokenizer.word_index) + 1
+# Mapping the input sentences into the vocabulary indexes
+train_sequences = tokenizer.texts_to_sequences(texts)
+# The longest set of design tokens
+max_sequence = max(len(s) for s in train_sequences)
+# No. of tokens to have in each input sentence
+max_length = 48
