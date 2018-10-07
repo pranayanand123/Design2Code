@@ -9,6 +9,8 @@ import os
 import cv2
 import numpy as np
 from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -62,3 +64,23 @@ train_sequences = tokenizer.texts_to_sequences(texts)
 max_sequence = max(len(s) for s in train_sequences)
 # No. of tokens to have in each input sentence
 max_length = 48
+
+def preprocess_data(sequences, features):
+    X, y, image_data = list(), list(), list()
+    for img_no, seq in enumerate(sequences):
+        for i in range(1, len(seq)):
+            in_seq, out_seq = seq[:i], seq[i]
+            # Padding the input token sentences to max_sequence with 0
+            in_seq = pad_sequences([in_seq], maxlen=max_sequence)[0]
+            # Turning the output into one-hot encoding
+            out_seq = to_categorical([out_seq], num_classes=vocab_size)[0]
+            # Add the corresponding image to the boostrap token file
+            image_data.append(features[img_no])
+            # Limit the input sentence to 48 tokens and add it
+            X.append(in_seq[-48:])
+            y.append(out_seq)
+    return np.array(X), np.array(y), np.array(image_data)
+
+X, y, image_data = preprocess_data(train_sequences, train_features)
+
+
