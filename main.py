@@ -14,7 +14,7 @@ from keras.utils import to_categorical
 from keras.models import Model, Sequential
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
-from keras.layers import RepeatVector, Input
+from keras.layers import RepeatVector, Input, Embedding, LSTM
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -105,5 +105,11 @@ image_model.add(Dropout(0.3))
 image_model.add(RepeatVector(max_length))
 
 visual_input = Input(shape=(256, 256, 3,))
+
 encoded_image = image_model(visual_input)
+
+language_input = Input(shape=(max_length,))
+language_model = Embedding(vocab_size, 50, input_length=max_length, mask_zero=True)(language_input)
+language_model = LSTM(128, return_sequences=True)(language_model)
+language_model = LSTM(128, return_sequences=True)(language_model)
 
