@@ -1,0 +1,11 @@
+stack {
+row {
+switch
+}
+row {
+switch
+}
+}
+footer {
+btn-search, btn-search, btn-search
+}
