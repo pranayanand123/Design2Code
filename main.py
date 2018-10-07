@@ -122,3 +122,6 @@ decoder = Dense(vocab_size, activation='softmax')(decoder)
 model = Model(inputs=[visual_input, language_input], outputs=decoder)
 optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+
+model.fit([image_data, X], y, batch_size=1, shuffle=False, validation_split=0.1, verbose=1, epochs=50)
+
