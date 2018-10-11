@@ -16,6 +16,7 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
 from keras.layers import RepeatVector, Input, Embedding, LSTM, concatenate
 from keras.optimizers import RMSprop
+import pickle
 
 def load_doc(filename):
     file = open(filename, 'r')
@@ -57,6 +58,8 @@ train_features, texts = load_data(data_dir)
 
 setText = [x.split() for x in texts]
 setText2 = list(set(x for l in setText for x in l))
+with open("unique", "wb") as fp:   #Pickling
+    pickle.dump(setText2, fp)
 #A dictionary mapping text or symbol to integer
 tokenizer = Tokenizer(filters='', split=" ", lower=False)
 #Fitting on vocabulary 
